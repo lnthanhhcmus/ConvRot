@@ -1,11 +1,11 @@
-# OpenKE-PyTorch
+# Knowledge Graph Embedding by Relational Rotation and Complex Convolution for Link Prediction
 
-An Open-source Framework for Knowledge Embedding implemented with PyTorch.
+This source code for ConvRot is based on OpenKE - An Open-source Framework for Knowledge Embedding implemented with PyTorch.
 
-More information is available on our website
+More information is available on OpenKE website
 [http://openke.thunlp.org/](http://openke.thunlp.org/)
 
-If you use the code, please cite the following [paper](http://aclweb.org/anthology/D18-2024):
+If you use the framework, please cite the following [paper](http://aclweb.org/anthology/D18-2024):
 
 ```
  @inproceedings{han2018openke,
@@ -16,9 +16,11 @@ If you use the code, please cite the following [paper](http://aclweb.org/antholo
  }
 ```
 
-This package is mainly contributed (in chronological order) by [Xu Han](https://github.com/THUCSTHanxu13), [Yankai Lin](https://github.com/Mrlyk423), [Ruobing Xie](http://nlp.csai.tsinghua.edu.cn/~xrb/), [Zhiyuan Liu](http://nlp.csai.tsinghua.edu.cn/~lzy/), [Xin Lv](https://github.com/davidlvxin), [Shulin Cao](https://github.com/ShulinCao), [Weize Chen](https://github.com/chenweize1998), [Jingqin Yang](https://github.com/yjqqqaq).
+The base code of OpenKE is mainly contributed (in chronological order) by [Xu Han](https://github.com/THUCSTHanxu13), [Yankai Lin](https://github.com/Mrlyk423), [Ruobing Xie](http://nlp.csai.tsinghua.edu.cn/~xrb/), [Zhiyuan Liu](http://nlp.csai.tsinghua.edu.cn/~lzy/), [Xin Lv](https://github.com/davidlvxin), [Shulin Cao](https://github.com/ShulinCao), [Weize Chen](https://github.com/chenweize1998), [Jingqin Yang](https://github.com/yjqqqaq).
 
-## Overview
+The new version of OpenKE is mainly contributed by [Nam Le](https://github.com/nhutnamhcmus)
+
+## Overview about OpenKE
 
 This is an Efficient implementation based on PyTorch for knowledge representation learning (KRL). We use C++ to implement some underlying operations such as data preprocessing and negative sampling. For each specific model, it is implemented by PyTorch with Python interfaces so that there is a convenient platform to run models on GPUs. OpenKE composes 4 repositories:
 
@@ -42,6 +44,9 @@ We are now developing a new version of OpenKE-PyTorch. The project has been comp
 - More scripts of the typical models for the benchmark datasets.
 - More extendable interfaces
 
+## Overview ConvRot
+
+ConvRot model to address these shortcomings by integrating a 2D convolution. Specifically, we perform convolution on embeddings of entities and relations to obtain support vector embeddings. These vectors are then combined into an element-wise rotation from the head entity to the tail entity using the Hadamard product, allowing the model to capture local interactions between entities and relations through the neural network while still ensuring intuitiveness through a roto-transformation in the link prediction. In addition, we offer two different strategies to design the complex convolution module and show their effect on the model performance. This proposed method is evaluated on standard benchmark datasets and achieves significantly improved results on MRR and Hits@K (K= 1, 3, 10). Overall, the link prediction performance of our model improves approximately by 5–7%. Besides, the ConvRot model is also considered separately on many relation types, such as one-to-one, one-to-many, many-to-one, and many-to-many.
 
 ## Models
 
@@ -53,11 +58,13 @@ OpenKE (Tensorflow):
 
 OpenKE (PyTorch):
 
-*	RESCAL
+*	 RESCAL
 *  DistMult, ComplEx, Analogy
 *  TransE, TransH, TransR, TransD
-*  SimplE
-*	RotatE
+*  SimplE (Fixed follwing: [https://github.com/thunlp/OpenKE/issues/151](https://github.com/thunlp/OpenKE/issues/151))
+*	 RotatE
+*  NConRot (Our proposed model)
+*  HConvRot (Our proposed model)
 
 We welcome any issues and requests for model implementation and bug fix.
 
@@ -73,44 +80,42 @@ For those large-scale entity sets, to corrupt all entities with the whole entity
 
 ## Experiments
 
-We have provided the hyper-parameters of some models to achieve the state-of-the-art performace (Hits@10 (filter)) on FB15K237 and WN18RR. These scripts can be founded in the folder "./examples/". Up to now, these models include TransE, TransH, TransR, TransD, DistMult, ComplEx. The results of these models are as follows,
+We have provided the hyper-parameters of some models to achieve the state-of-the-art performace (Hits@10 (filter)) on FB15K237 and WN18RR. These scripts can be founded in the file train_convrot_FB15K237_adv.py and train_convrot_WN18RR_adv.py. Up to now, these models include TransE, TransH, TransR, TransD, DistMult, ComplEx.
 
-|Model			|	WN18RR	|	FB15K237	| WN18RR (Paper\*)| FB15K237  (Paper\*)|
-|:-:		|:-:	|:-:  |:-:  |:-:  |
-|TransE	|0.512	|0.476|0.501|0.486|
-|TransH	|0.507	|0.490|-|-|
-|TransR	|0.519	|0.511|-|-|
-|TransD	|0.508	|0.487|-|-|
-|DistMult	|0.479	|0.419|0.49|0.419|
-|ComplEx	|0.485	|0.426|0.51|0.428|
-|ConvE		|0.506	|0.485|0.52|0.501|
-|RotatE	|0.549	|0.479|-|0.480|
-|RotatE (+adv)	|0.565	|0.522|0.571|0.533|
-
+<strong> We provide a new version of OpenKE-Pytorch new</strong>: That allow user can valid their own model on validation set of each benchmark dataset.
 
 <strong> We are still trying more hyper-parameters and more training strategies (e.g., adversarial training and label smoothing regularization) for these models. </strong> Hence, this table is still in change. We welcome everyone to help us update this table and hyper-parameters.
 
 
 ## Installation
 
-1. Install [PyTorch](https://pytorch.org/get-started/locally/)
+1. Install [PyTorch](https://pytorch.org/get-started/locally/) for latest PyTorch Version
 
-2. Clone the OpenKE-PyTorch branch:
-```bash
-git clone -b OpenKE-PyTorch https://github.com/thunlp/OpenKE --depth 1
-cd OpenKE
-cd openke
+2. Clone this project
+
 ```
-3. Compile C++ files
+git clone https://github.com/lnthanhhcmus/ConvRot
+```
+
+3. Compile C++ files: Requirement g++/gcc for latest version
+
 ```bash
 bash make.sh
 ```
 4. Quick Start
+
+For FB15k-237, FB15k and YAGO3-10:
+
 ```bash
-cd ../
-cp examples/train_transe_FB15K237.py ./
-python train_transe_FB15K237.py
+CUDA_VISIBLE_DEVICES=<gpu_id> python train_convrot_FB15K237_adv.py
 ```
+
+For WN18RR and WN18:
+
+```bash
+CUDA_VISIBLE_DEVICES=<gpu_id> python train_convrot_WN18RR_adv.py
+```
+
 ## Data
 
 * For training, datasets contain three files:
@@ -130,6 +135,19 @@ python train_transe_FB15K237.py
 
   type_constrain.txt: type constraining file, the first line is the number of relations. Then the following lines are type constraints for each relation. For example, the relation with id 1200 has 4 types of head entities, which are 3123, 1034, 58 and 5733. The relation with id 1200 has 4 types of tail entities, which are 12123, 4388, 11087 and 11088. You can get this file through **n-n.py** in folder benchmarks/FB15K
 
-## To do
+## Authors
 
-The document of the new version of OpenKE-PyTorch will come soon.
+Thanh Le, Nam Le, Bac Le (Faculty of Information Technology, University of Science, Ho Chi Minh City, Vietnam and Vietnam National University, Ho Chi Minh City, Vietnam)
+
+## CRediT authorship contribution statement
+
+Thanh Le: Conceptualization, Methodology, Writing- Original Draft, Validation, Supervision. Nam Le: Methodology, Software, Writing- Original Draft, Formal analysis, Investigation, Visualization. Bac Le: Supervision.
+
+## Declaration of competing interests
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+## Acknowledgments
+
+This research is funded by the University of Science, VNU-HCM, Vietnam under grant number CNTT 2022-2 and Advanced Program in Computer Science.
+
