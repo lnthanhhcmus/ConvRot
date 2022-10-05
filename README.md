@@ -147,7 +147,3 @@ Thanh Le: Conceptualization, Methodology, Writing- Original Draft, Validation, S
 
 The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
 
-## Acknowledgments
-
-This research is funded by the University of Science, VNU-HCM, Vietnam under grant number CNTT 2022-2 and Advanced Program in Computer Science.
-
